@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Давай встречаться?</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body {
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+    position: fixed;
+  }
+  body {
+    background: #f5e6d3;
+    font-family: 'Comic Sans MS', cursive, sans-serif;
+  }
+  #main {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+  }
+  h1 {
+    color: #ff6fa5;
+    font-size: 2em;
+    text-align: center;
+    text-shadow: 2px 2px 0 #ffb6d5;
+    animation: pulse 2s infinite;
+    padding: 40px 20px 0;
+    position: absolute;
+    top: 15%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+  }
+  @keyframes pulse {
+    0%, 100% { transform: translateX(-50%) scale(1); }
+    50% { transform: translateX(-50%) scale(1.05); }
+  }
+  button {
+    font-family: inherit;
+    font-size: 1.4em;
+    padding: 16px 40px;
+    border: 3px solid #ff6fa5;
+    border-radius: 50px;
+    background: #fff0f5;
+    color: #ff6fa5;
+    cursor: pointer;
+    font-weight: bold;
+    position: absolute;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+  #yesBtn {
+    top: 55%;
+    left: 25%;
+    transform: translate(-50%, -50%);
+  }
+  #yesBtn:active {
+    transform: translate(-50%, -50%) scale(0.95);
+  }
+  #noBtn {
+    top: 55%;
+    left: 75%;
+    transform: translate(-50%, -50%);
+    transition: top 0.3s ease, left 0.3s ease;
+  }
+  .phrase {
+    position: fixed;
+    color: #ff6fa5;
+    font-size: 1.1em;
+    font-weight: bold;
+    pointer-events: none;
+    animation: floatUp 2s ease-out forwards;
+    text-shadow: 1px 1px 0 #ffb6d5;
+    white-space: nowrap;
+    z-index: 100;
+  }
+  @keyframes floatUp {
+    0% { opacity: 1; transform: translateX(-50%) translateY(0); }
+    100% { opacity: 0; transform: translateX(-50%) translateY(-100px); }
+  }
+  #celebration {
+    display: none;
+    text-align: center;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    padding: 0 20px;
+    animation: zoomIn 0.5s ease-out;
+  }
+  @keyframes zoomIn {
+    0% { transform: translate(-50%, -50%) scale(0); opacity: 0; }
+    100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+  }
+  #celebration h2 {
+    color: #ff6fa5;
+    font-size: 3.5em;
+    text-shadow: 3px 3px 0 #ffb6d5;
+    margin-bottom: 30px;
+    animation: bounce 1s infinite;
+  }
+  @keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-20px); }
+  }
+  #celebration .emojis {
+    font-size: 2.2em;
+    line-height: 1.5;
+    word-wrap: break-word;
+  }
+  .floating-emoji {
+    position: fixed;
+    font-size: 2.5em;
+    pointer-events: none;
+    animation: floatAround 3s ease-in-out infinite;
+    z-index: 1;
+  }
+  @keyframes floatAround {
+    0%, 100% { transform: translate(0, 0) rotate(0deg); }
+    50% { transform: translate(-15px, -40px) rotate(15deg); }
+  }
+  @media (min-width: 768px) {
+    h1 { font-size: 3.5em; }
+    button { font-size: 1.8em; padding: 20px 50px; }
+    #celebration h2 { font-size: 6em; }
+    #celebration .emojis { font-size: 4em; }
+  }
+</style>
+</head>
+<body>
+
+<div id="main">
+  <h1>Давай встречаться? 💕</h1>
+  <button id="yesBtn">Да</button>
+  <button id="noBtn">Нет</button>
+</div>
+
+<div id="celebration">
+  <h2>УРА!!! 🎉</h2>
+  <div class="emojis">💖✨💕🥰💞🌸💝😘💗🎊</div>
+</div>
+
+<script>
+  var noBtn = document.getElementById('noBtn');
+  var yesBtn = document.getElementById('yesBtn');
+  var main = document.getElementById('main');
+  var celebration = document.getElementById('celebration');
+
+  var phrases = [
+    'не лови меня! 🙈',
+    'подумай ещё раз 😏',
+    'ты точно сюда? 🤔',
+    'не выйдет 💨',
+    'попробуй ещё! 😜',
+    'я быстрая 💫',
+    'мимо! 🎯',
+    'жми ДА! 💕',
+    'не-а 🙅',
+    'упс! 🤭',
+    'хихи 🏃💨',
+    'серьёзно? 🥺',
+    'только ДА ❤️',
+    'не туда! 👉',
+    'ха-ха 😆'
+  ];
+
+  function showPhrase(x, y) {
+    var phrase = document.createElement('div');
+    phrase.className = 'phrase';
+    phrase.textContent = phrases[Math.floor(Math.random() * phrases.length)];
+    var pad = 80;
+    if (x < pad) x = pad;
+    if (x > window.innerWidth - pad) x = window.innerWidth - pad;
+    if (y < 50) y = 50;
+    phrase.style.left = x + 'px';
+    phrase.style.top = y + 'px';
+    phrase.style.transform = 'translateX(-50%)';
+    document.body.appendChild(phrase);
+    setTimeout(function() { 
+      if (phrase.parentNode) phrase.parentNode.removeChild(phrase); 
+    }, 2000);
+  }
+
+  function moveNoBtn() {
+    var w = noBtn.offsetWidth;
+    var h = noBtn.offsetHeight;
+    var pad = 15;
+    var maxX = window.innerWidth - w - pad;
+    var maxY = window.innerHeight - h - pad;
+    
+    var yesRect = yesBtn.getBoundingClientRect();
+    var newX, newY;
+    var tries = 0;
+    
+    do {
+      newX = pad + Math.random() * (maxX - pad);
+      newY = pad + Math.random() * (maxY - pad);
+      tries++;
+      var overlap = !(newX + w + 20 < yesRect.left || 
+                      newX > yesRect.right + 20 || 
+                      newY + h + 20 < yesRect.top || 
+                      newY > yesRect.bottom + 20);
+    } while (overlap && tries < 15);
+    
+    noBtn.style.transform = 'none';
+    noBtn.style.left = newX + 'px';
+    noBtn.style.top = newY + 'px';
+
+    showPhrase(newX + w / 2, newY - 5);
+  }
+
+  // главный трюк: убегаем при ЛЮБОМ приближении к кнопке
+  // на телефоне - touchstart на самой кнопке + на области вокруг
+  
+  function handleTouch(e) {
+    moveNoBtn();
+  }
+
+  // ловим касание
+  noBtn.addEventListener('touchstart', handleTouch);
+  noBtn.addEventListener('mouseenter', handleTouch);
+  noBtn.addEventListener('mouseover', handleTouch);
+  noBtn.addEventListener('click', function(e) {
+    e.preventDefault();
+    moveNoBtn();
+  });
+
+  // дополнительно: следим за пальцем и убегаем если он близко
+  document.addEventListener('touchmove', function(e) {
+    if (celebration.style.display === 'block') return;
+    var touch = e.touches[0];
+    var rect = noBtn.getBoundingClientRect();
+    var cx = rect.left + rect.width / 2;
+    var cy = rect.top + rect.height / 2;
+    var dx = touch.clientX - cx;
+    var dy = touch.clientY - cy;
+    var dist = Math.sqrt(dx*dx + dy*dy);
+    if (dist < 100) {
+      moveNoBtn();
+    }
+  }, { passive: true });
+
+  yesBtn.addEventListener('click', function() {
+    main.style.display = 'none';
+    celebration.style.display = 'block';
+    
+    var emojiList = ['💖', '✨', '💕', '🥰', '💞', '🌸', '💝', '😘', '💗', '🎊', '💘', '🌺'];
+    var count = window.innerWidth < 768 ? 15 : 25;
+    for (var i = 0; i < count; i++) {
+      var el = document.createElement('div');
+      el.className = 'floating-emoji';
+      el.textContent = emojiList[Math.floor(Math.random() * emojiList.length)];
+      el.style.left = Math.random() * 90 + 'vw';
+      el.style.top = Math.random() * 90 + 'vh';
+      el.style.animationDelay = Math.random() * 3 + 's';
+      document.body.appendChild(el);
+    }
+  });
+</script>
+
+</body>
+</html>
